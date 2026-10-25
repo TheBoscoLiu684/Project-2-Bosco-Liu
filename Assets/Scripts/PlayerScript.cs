@@ -10,10 +10,9 @@ public class PlayerScript : MonoBehaviour
     public float rotateSpeed = 0.5f;
     public PlayerState state;
     public Animator anim;
+    public Transform cameraPivot;
     void Start()
     {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
         anim.GetComponent<Animator>();
         state = PlayerState.Idle;
     }
@@ -21,14 +20,12 @@ public class PlayerScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Transform cam = Camera.main.transform;
-        Vector3 camForward = cam.forward;
-        Vector3 camRight = cam.right;
-        camForward.y = 0f;
-        camRight.y = 0f;
-        camForward.Normalize();
-        camRight.Normalize();
-
+        Vector3 forward = cameraPivot.forward;
+        Vector3 right = cameraPivot.right;
+        forward.y = 0f;
+        right.y = 0f;
+        forward.Normalize();
+        right.Normalize();
 
         float currentSpeed = speed;
         PlayerState s = PlayerState.Idle;
@@ -37,22 +34,22 @@ public class PlayerScript : MonoBehaviour
 
         if (Keyboard.current.wKey.isPressed)
         {
-            direction += camForward;
+            direction += forward;
             s = PlayerState.Walking;
         }
         if (Keyboard.current.aKey.isPressed)
         {
-            direction -= camRight;
+            direction -= right;
             s = PlayerState.Walking;
         }
         if (Keyboard.current.sKey.isPressed)
         {
-            direction -= camForward;
+            direction -= forward;
             s = PlayerState.Walking;
         }
         if (Keyboard.current.dKey.isPressed)
         {
-            direction += camRight;
+            direction += right;
             s = PlayerState.Walking;
         }
 
