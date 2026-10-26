@@ -1,19 +1,27 @@
-using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class PlayerScript : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public Rigidbody rb;
+    public Slider staminaSlider;
     public float speed = 3f;
     public float rotateSpeed = 0.5f;
+    public float stamina = 100f;
+    public float staminaTotal = 100f;
+    public float staminaDrain = 20f;
+    public float staminaRegen = 10f;
     public PlayerState state;
     public Animator anim;
     public Transform cameraPivot;
     void Start()
     {
         anim.GetComponent<Animator>();
+        stamina = staminaTotal;
+        staminaSlider.maxValue = staminaTotal;
+        staminaSlider.value = stamina;
         state = PlayerState.Idle;
     }
 
@@ -53,13 +61,21 @@ public class PlayerScript : MonoBehaviour
             s = PlayerState.Walking;
         }
 
-        if (s == PlayerState.Walking && Keyboard.current.shiftKey.isPressed)
+        if (s == PlayerState.Walking && Keyboard.current.shiftKey.isPressed && stamina > 0f)
         {
-
             currentSpeed = 5f;
             s = PlayerState.Running;
+            anim.SetBool("isRunning", true);
+            stamina -= staminaDrain * Time.deltaTime;
+        }
+        else
+        {
+            anim.SetBool("isRunning", false);
+            stamina += staminaRegen * Time.deltaTime;
         }
 
+        stamina = Mathf.Clamp(stamina, 0f, staminaTotal);
+        staminaSlider.value = stamina;
         vel = direction.normalized * currentSpeed;
 
         
