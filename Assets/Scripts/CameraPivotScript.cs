@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 
 public class CameraPivotScript : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    //camera movement stuffz
     public float sens = 0.1f;
     public float minY = -70f;
     public float maxY = 70f;

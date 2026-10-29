@@ -2008,6 +2008,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerScript
   rb: {fileID: 2105135060}
   staminaSlider: {fileID: 593068368}
+  playerModel: {fileID: 777664098}
   speed: 3
   rotateSpeed: 0.5
   stamina: 100

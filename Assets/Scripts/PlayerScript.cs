@@ -1,14 +1,16 @@
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class PlayerScript : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    //too many variables :sob:
     public Rigidbody rb;
     public Slider staminaSlider;
+    public Transform playerModel;
     public float speed = 3f;
-    public float rotateSpeed = 0.5f;
+    public float rotateSpeed = 10f;
     public float stamina = 100f;
     public float staminaTotal = 100f;
     public float staminaDrain = 20f;
@@ -28,6 +30,7 @@ public class PlayerScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //camera rotation bs
         Vector3 forward = cameraPivot.forward;
         Vector3 right = cameraPivot.right;
         forward.y = 0f;
@@ -35,11 +38,13 @@ public class PlayerScript : MonoBehaviour
         forward.Normalize();
         right.Normalize();
 
+        //movement prep
         float currentSpeed = speed;
         PlayerState s = PlayerState.Idle;
         Vector3 direction = Vector3.zero;
         Vector3 vel = Vector3.zero;
 
+        //movement :)))
         if (Keyboard.current.wKey.isPressed)
         {
             direction += forward;
@@ -48,7 +53,7 @@ public class PlayerScript : MonoBehaviour
         if (Keyboard.current.aKey.isPressed)
         {
             direction -= right;
-            s = PlayerState.Walking;
+            s = PlayerState.Walking; 
         }
         if (Keyboard.current.sKey.isPressed)
         {
@@ -61,6 +66,10 @@ public class PlayerScript : MonoBehaviour
             s = PlayerState.Walking;
         }
 
+        playerModel.rotation = Quaternion.LookRotation(forward);//character faces camera direction based on the current forward direction of the camera
+        //allows strafing :)
+
+        //RUNNING!!! and stamina 
         if (s == PlayerState.Walking && Keyboard.current.shiftKey.isPressed && stamina > 0f)
         {
             currentSpeed = 5f;
@@ -73,12 +82,9 @@ public class PlayerScript : MonoBehaviour
             anim.SetBool("isRunning", false);
             stamina += staminaRegen * Time.deltaTime;
         }
-
         stamina = Mathf.Clamp(stamina, 0f, staminaTotal);
         staminaSlider.value = stamina;
         vel = direction.normalized * currentSpeed;
-
-        
 
         SetState(s);
         rb.linearVelocity = vel;
