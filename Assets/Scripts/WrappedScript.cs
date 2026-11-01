@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -70,9 +71,8 @@ public class WrappedScript : MonoBehaviour
                 
 
         }
-        Patrol();
     }
-
+    
     public void Patrol()
     {
         if (state == MonsterState.Waiting)
@@ -100,7 +100,7 @@ public class WrappedScript : MonoBehaviour
         agent.isStopped = false;
         bool accepted = agent.SetDestination(target.position);
         Debug.Log("Destination accepted: " + accepted);
-        Debug.Log("Moving to point " + patrolPointIndex);
+        //Debug.Log("Moving to point " + patrolPointIndex);
 
         patrolPointIndex = (patrolPointIndex + 1) % patrolPoints.Length;
         state = MonsterState.Patrolling;
@@ -110,7 +110,7 @@ public class WrappedScript : MonoBehaviour
     {
         state = MonsterState.Waiting;
         agent.isStopped = true;
-        Debug.Log("Waiting at Point");
+        //Debug.Log("Waiting at Point");
         yield return new WaitForSeconds(waitTime);
         agent.isStopped = false;
         NextPatrolPoint();
@@ -118,6 +118,8 @@ public class WrappedScript : MonoBehaviour
 
     public bool CanSee()
     {
+        if (playerTarget.GetComponent<PlayerScript>().isHidden)
+            return false;
         return FacingPlayer() && ClearPath();
     }
 
@@ -125,7 +127,7 @@ public class WrappedScript : MonoBehaviour
     {
         Vector3 facingDir = (playerTarget.position - transform.position).normalized;
         float angle = Vector3.Angle(transform.forward, facingDir);
-        Debug.Log("Angle to player: " + angle);
+        //Debug.Log("Angle to player: " + angle);
         return angle <= viewAngle / 2f;
     }
     public bool ClearPath()
@@ -133,7 +135,7 @@ public class WrappedScript : MonoBehaviour
         Vector3 facingDir = playerTarget.position - transform.position;
         if(Physics.Raycast(transform.position, facingDir.normalized, out RaycastHit hit, facingDir.magnitude))
         {
-            Debug.Log("hit: " + hit.transform.name);
+            //Debug.Log("hit: " + hit.transform.name);
             return hit.transform == playerTarget;
         }
         return true;
@@ -141,6 +143,14 @@ public class WrappedScript : MonoBehaviour
 
     public void ChasingPlayer()
     {
+        if (playerTarget.GetComponent<PlayerScript>().isHidden)
+        {
+            state = MonsterState.Patrolling;
+            agent.isStopped = true;
+            Debug.Log("Stopping Chase");
+            return;
+        }
+        agent.isStopped = false;   
         agent.SetDestination(playerTarget.position);
     }
     public enum MonsterState

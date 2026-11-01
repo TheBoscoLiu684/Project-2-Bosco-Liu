@@ -18,6 +18,10 @@ public class PlayerScript : MonoBehaviour
     public PlayerState state;
     public Animator anim;
     public Transform cameraPivot;
+    public bool isHidden = false;
+    public bool isCrouched = false;
+    public BoxCollider hidingCollider;
+    public CapsuleCollider movementCollider;
     void Start()
     {
         anim.GetComponent<Animator>();
@@ -43,6 +47,23 @@ public class PlayerScript : MonoBehaviour
         PlayerState s = PlayerState.Idle;
         Vector3 direction = Vector3.zero;
         Vector3 vel = Vector3.zero;
+
+        if(Keyboard.current.ctrlKey.isPressed)
+        {
+            isCrouched = true;
+            anim.SetBool("isCrouched", true);
+            currentSpeed = 1f;
+            movementCollider.height = 1f;
+            movementCollider.center = new Vector3(0f, 0.5f, 0f);
+
+        }
+        else
+        {
+            isCrouched = false;
+            anim.SetBool("isCrouched", false);
+            movementCollider.height = 1.7f;
+            movementCollider.center = new Vector3(0f, 0.85f, 0);
+        }
 
         //movement :)))
         if (Keyboard.current.wKey.isPressed)
@@ -70,7 +91,7 @@ public class PlayerScript : MonoBehaviour
         //allows strafing :)
 
         //RUNNING!!! and stamina 
-        if (s == PlayerState.Walking && Keyboard.current.shiftKey.isPressed && stamina > 0f)
+        if (s == PlayerState.Walking && Keyboard.current.shiftKey.isPressed && stamina > 0f && !isCrouched)
         {
             currentSpeed = 5f;
             s = PlayerState.Running;
