@@ -8,13 +8,15 @@ public class WrappedScript : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public Transform playerTarget;
     public Transform[] patrolPoints;
-    public float waitTime = 2f;
+    public float waitTime = 4f;
     public float stopDistance = 0.5f;
 
-    public float detectRange = 10f;
-    public float viewAngle = 90f;
+    public float detectRange = 20f;
+    public float viewAngle = 160f;
     public float lostPlayer = 4f;
     public float lostPlayerTime;
+    public Vector3 lastSeenPos;
+    public float investigateTime = 4f;
 
     public NavMeshAgent agent;
     public Animator monAnim;
@@ -24,7 +26,7 @@ public class WrappedScript : MonoBehaviour
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-        monAnim = GetComponent<Animator>();
+        monAnim = GetComponentInChildren<Animator>();
         if(patrolPoints.Length == 0)
         {
             Debug.Log("No points assigned");
@@ -43,20 +45,28 @@ public class WrappedScript : MonoBehaviour
             case MonsterState.Patrolling:
             {
                  Patrol();
+                 monAnim.SetBool("isWalk", agent.velocity.magnitude > 0.1f && state != MonsterState.Chasing);
                  if (playerDistance <= detectRange && CanSee())
                  {
                      state = MonsterState.Chasing;
                  }
                  break;
             }
-                
 
+            case MonsterState.Waiting:
+            {
+                    monAnim.SetBool("isWait", state == MonsterState.Waiting);
+                    break;
+            }
             case MonsterState.Chasing:
             {
                  ChasingPlayer();
+                 monAnim.SetBool("isChase", state == MonsterState.Chasing);
                  if (CanSee())
                  {
                      lostPlayerTime = 0f;
+                     lastSeenPos = playerTarget.position;
+                     //Debug.Log("Last seen position: " + lastSeenPos);
                  }
                  else
                  {
@@ -86,6 +96,7 @@ public class WrappedScript : MonoBehaviour
             Debug.LogWarning("Monster has no path to its destination!");
             return;
         }
+        agent.speed = 2;
         if (!agent.pathPending && agent.remainingDistance <= stopDistance)
         {
             StartCoroutine(WaitAtPoint());
@@ -106,6 +117,14 @@ public class WrappedScript : MonoBehaviour
         state = MonsterState.Patrolling;
     }
 
+    public void ReturnToPoint()
+    {
+        agent.isStopped = false;
+        Transform target = patrolPoints[(patrolPointIndex - 1 + patrolPoints.Length) % patrolPoints.Length];
+        agent.SetDestination(target.position);
+        state = MonsterState.Patrolling;
+    }
+
     public IEnumerator WaitAtPoint()
     {
         state = MonsterState.Waiting;
@@ -114,6 +133,24 @@ public class WrappedScript : MonoBehaviour
         yield return new WaitForSeconds(waitTime);
         agent.isStopped = false;
         NextPatrolPoint();
+    }
+
+    public IEnumerator Investigate()
+    {
+        agent.isStopped = false;
+        agent.SetDestination(lastSeenPos); //walk towards the position it saw player last
+        state = MonsterState.Investigating;
+        while (agent.pathPending || agent.remainingDistance > stopDistance) //keeps running until the monster gets to the position then runs the rest of the code
+        {
+            yield return null;
+        }
+
+        agent.isStopped = true;
+        Debug.Log("Now Investigating");
+        yield return new WaitForSeconds(investigateTime);
+
+        agent.isStopped = false;
+        ReturnToPoint();
     }
 
     public bool CanSee()
@@ -145,19 +182,23 @@ public class WrappedScript : MonoBehaviour
     {
         if (playerTarget.GetComponent<PlayerScript>().isHidden)
         {
-            state = MonsterState.Patrolling;
-            agent.isStopped = true;
+            lostPlayerTime = 0f;
             Debug.Log("Stopping Chase");
+            Debug.Log("Investigating");
+            StartCoroutine(Investigate());
             return;
         }
         agent.isStopped = false;   
         agent.SetDestination(playerTarget.position);
+        agent.speed = 6f;
     }
     public enum MonsterState
     {
         None = 0,
         Patrolling = 1,
         Waiting = 2,
-        Chasing = 3
+        Chasing = 3,
+        Investigating = 4
+
     }
 }

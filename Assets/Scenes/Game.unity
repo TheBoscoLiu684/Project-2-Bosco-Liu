@@ -5894,6 +5894,8 @@ MonoBehaviour:
   viewAngle: 90
   lostPlayer: 4
   lostPlayerTime: 0
+  lastSeenPos: {x: 0, y: 0, z: 0}
+  investigateTime: 4
   agent: {fileID: 1553623191}
   monAnim: {fileID: 925156071}
   patrolPointIndex: 0

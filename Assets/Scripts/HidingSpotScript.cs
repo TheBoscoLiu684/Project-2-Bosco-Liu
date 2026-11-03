@@ -16,21 +16,21 @@ public class HidingSpotScript : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Entered hiding spot: " + other.name);
+        //Debug.Log("Entered hiding spot: " + other.name);
         PlayerScript player = other.GetComponent<PlayerScript>();
         if(player != null && other == player.hidingCollider)
         {
-            Debug.Log("player is hidden");
+            //Debug.Log("player is hidden");
             player.isHidden = true;
         }
     }
     private void OnTriggerExit(Collider other)
     {
-        Debug.Log("Exited hiding spot: " + other.name);
+        //Debug.Log("Exited hiding spot: " + other.name);
         PlayerScript player = other.GetComponent<PlayerScript>();
         if(player != null && other == player.hidingCollider)
         {
-            Debug.Log("player is not hidden");
+            //Debug.Log("player is not hidden");
             player.isHidden = false;
         }
     }
