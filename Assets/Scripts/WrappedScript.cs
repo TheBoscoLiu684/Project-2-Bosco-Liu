@@ -2,6 +2,7 @@ using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 
 public class WrappedScript : MonoBehaviour
 {
@@ -191,6 +192,15 @@ public class WrappedScript : MonoBehaviour
         agent.isStopped = false;   
         agent.SetDestination(playerTarget.position);
         agent.speed = 6f;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        PlayerScript player = collision.gameObject.GetComponent<PlayerScript>();
+        if (collision.gameObject.CompareTag("Player") && !player.isHidden && player != null)
+        {
+            SceneManager.LoadScene("Retry");
+        }
     }
     public enum MonsterState
     {
