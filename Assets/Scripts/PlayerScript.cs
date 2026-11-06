@@ -20,6 +20,7 @@ public class PlayerScript : MonoBehaviour
     public Transform cameraPivot;
     public bool isHidden = false;
     public bool isCrouched = false;
+    public bool hasKey = false;
     public BoxCollider hidingCollider;
     public CapsuleCollider movementCollider;
     void Start()
