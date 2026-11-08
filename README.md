@@ -18,5 +18,11 @@ https://sketchfab.com/3d-models/ceiling-light-a209cd51a061495cbb0c9b16d187c672 (
 
 https://daniel-jurys.itch.io/psx-derelict-furniture (props)
 
+References
+
+https://www.youtube.com/watch?v=l8ADGZTwhmk (monster AI)
+
+
+
 
 
