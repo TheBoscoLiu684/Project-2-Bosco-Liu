@@ -14,5 +14,7 @@ https://sketchfab.com/3d-models/wood-desk-table-interior-1-81bdaeac27e346f88ae41
 
 https://sketchfab.com/3d-models/door-metal-door-window-7mb-362754895ebe411bb027966bcf9a86a1 (door)
 
+https://sketchfab.com/3d-models/ceiling-light-a209cd51a061495cbb0c9b16d187c672 (lights)
+
 
 
