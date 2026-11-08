@@ -16,5 +16,7 @@ https://sketchfab.com/3d-models/door-metal-door-window-7mb-362754895ebe411bb0279
 
 https://sketchfab.com/3d-models/ceiling-light-a209cd51a061495cbb0c9b16d187c672 (lights)
 
+https://daniel-jurys.itch.io/psx-derelict-furniture (props)
+
 
 
