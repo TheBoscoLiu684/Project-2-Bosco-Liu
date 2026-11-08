@@ -20,7 +20,7 @@ public class HidingSpotScript : MonoBehaviour
         PlayerScript player = other.GetComponent<PlayerScript>();
         if(player != null && other == player.hidingCollider)
         {
-            //Debug.Log("player is hidden");
+            Debug.Log("player is hidden");
             player.isHidden = true;
         }
     }
@@ -30,7 +30,7 @@ public class HidingSpotScript : MonoBehaviour
         PlayerScript player = other.GetComponent<PlayerScript>();
         if(player != null && other == player.hidingCollider)
         {
-            //Debug.Log("player is not hidden");
+            Debug.Log("player is not hidden");
             player.isHidden = false;
         }
     }
