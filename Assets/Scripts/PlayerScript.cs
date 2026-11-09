@@ -1,4 +1,3 @@
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -49,7 +48,7 @@ public class PlayerScript : MonoBehaviour
         Vector3 direction = Vector3.zero;
         Vector3 vel = Vector3.zero;
 
-        if(Keyboard.current.ctrlKey.isPressed)
+        if(Keyboard.current.cKey.isPressed)
         {
             isCrouched = true;
             anim.SetBool("isCrouched", true);
